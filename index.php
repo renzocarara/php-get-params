@@ -30,7 +30,6 @@ sono sostituite da tre "*". -->
 
         // leggo la bad word dal parametro GET
         $bad_word = $_GET['bad_word'];
-        echo $bad_word;
 
         // verifico se la badword ha un valore diverso da nullo
         if ($bad_word !="") {
@@ -46,7 +45,6 @@ sono sostituite da tre "*". -->
             $num_caratteri = strlen($testo);
             // conto tutte le occorenze, senza considerare il case sensitive
             $num_occorrenze = substr_count(strtolower($testo), $bad_word);
-            echo $num_occorrenze;
             // $num_spazi = $num_caratteri - strlen($testo_senza_spazi);
 
             // // trasformo il testo (stringa) in un array
