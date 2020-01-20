@@ -37,45 +37,41 @@ sono sostituite da tre "*". -->
 
             // testo da censurare
             $testo = "Lorem cuorum dolor sit amet, consectetur adipisicing elit. Voluptates quo minus blanditiis cuorum tenetur tempora delectus culpa, error esse quia magnam harum dicta quod quos placeat totam iste. Distinctio voluptates perferendis accusamus voluptatum sunt, in, id ex eum rerum quidem, doloribus lorem cuorum est quam fugit ut dolore rem lorem aspernatur voluptatem laborum. A lorem, placeat praesentium harum accusamus odio eligendi, labore cuorum, minus natus iur cuorum";
-            // $testo_originale = $testo;
             // stringa per censurare testo
             $censura = "<strong id='asterischi'>***</strong>";
             // informazioni aggiuntive sul testo
             $num_parole = str_word_count($testo);
             $num_caratteri = strlen($testo);
-            // conto tutte le occorenze, senza considerare il case sensitive
-            $num_occorrenze = substr_count(strtolower($testo), $bad_word);
-            // $num_spazi = $num_caratteri - strlen($testo_senza_spazi);
 
-            // // trasformo il testo (stringa) in un array
-            // $array_testo = str_word_count($testo, 2);
-            // // creo un array associativo, in cui le chiavi sono le parole del testo e il valore il numero di occorrenze di quella parola
-            // $array_occorrenze = array_count_values($array_testo);
-            //
-            // $occorrenza_minima = 2; // minimo numero di occorrenze per considerare la parola frequente
-            // foreach($array_occorrenze as $parola => $quante_volte) {
-            //
-            //     if ($quante_volte >= $occorrenza_minima) {
-            //         // scrivo in un nuovo array solo gli elementi che hanno un valore >= a $occorrenza_minima
-            //         array_push($array_parole_frequenti[]= [$parola => $quante_volte]);
-            //     }
-            // }
+            echo '<h3> Questo è il testo completo: </h3>' . $testo;
 
+            // uso la versione che ignora il 'case' per individuare tutte le occorrenze indipendetemente da maiuscole/minuscole
+            // questa funzione però mi sostituisce anche le sottostringhe della parola cercata
+            // $testo_censurato = str_ireplace($bad_word, $censura, $testo, $contatore);
 
-            // echo 'Parole più frequenti (almeno ' . $occorrenza_minima . ' presenze): <br>';
-            // echo '<pre>';
-            // print_r($array_parole_frequenti);
-            // echo '</pre>';
+            // per evitare censure di sotto-stringhe anzichè parole intere, devo lavorare su di un array
+            // trasformo la stringa in un array così da avere tutte le parole separate, ognuna è un elemento dell'array
+            $array_di_testo = explode(" ", $testo); // su questo inserirò gli elementi censurati (asterischi) nella giusta posizione
+            $array_di_testo_lowerizzato = explode(" ", strtolower($testo)); // questo mi serve per fare i confronti con la badword
+            // ricerco nell'array le badwords e ricavo un array di chiavi ovvero gli indici degli elementi cercati
+            $keys_array = array_keys($array_di_testo_lowerizzato, $bad_word);
+            $num_occorrenze = sizeof($keys_array);
 
+            // faccio qualcosa solo se ci sono delle parole da censurare
             if ($num_occorrenze > 0) {
-                // uso la versione no case sensitive per individuare tutte le occorrenze indipendetemente da maiuscole/minuscole
-                $testo_censurato = str_ireplace($bad_word, $censura, $testo, $contatore);
 
-                echo '<h3> Questo è il testo completo: </h3>' . $testo;
+                // censuro il testo lavorando sull'array originale non 'lowerizzato'
+                for ($i=0; $i < $num_occorrenze ; $i++) {
+                    $array_di_testo[$keys_array[$i]] = $censura;
+                }
+
+                //ricompongo la stringa a partire dall'array censurato
+                $testo_censurato = implode(" ", $array_di_testo);
+
                 echo '<h3> Questo è il testo censurato: </h3><p>' . $testo_censurato . '</p><br>';
                 echo '<h4>Informazioni aggiuntive:</h4>';
-                echo 'Parole totali: <span>' . $num_parole . '</span><br>';
-                echo 'Parole censurate: <span id="num-parole-censurate">' . $contatore . '</span><br>';
+                echo 'Parole totali nel testo: <span>' . $num_parole . '</span><br>';
+                echo 'Parole censurate: <span id="num-parole-censurate">' . $num_occorrenze . '</span><br>';
             } else {
                 echo '<h3>Non ci sono bad word da censurare</h3>';
             }
