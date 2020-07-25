@@ -41,7 +41,7 @@ sono sostituite da tre "*". -->
             $censura = "<strong id='asterischi'>***</strong>";
             // informazioni aggiuntive sul testo
             $num_parole = str_word_count($testo);
-            $num_caratteri = strlen($testo);
+            $num_caratteri = mb_strlen($testo);
 
             echo '<h3> Questo è il testo completo: </h3>' . $testo;
 
@@ -76,7 +76,8 @@ sono sostituite da tre "*". -->
                 echo '<h3>Non ci sono bad word da censurare</h3>';
             }
         } else {
-            echo '<h3>ATTENZIONE: manca la "badword"!</h3>';
+            echo '<h3>ATTENZIONE: manca la "badword nell\'URL"!</h3>';
+            echo 'esempio: http://localhost/036/php-get-params/?bad_word=lorem';
         }
 
         ?>
